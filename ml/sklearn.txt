@@ -1,0 +1,8 @@
+SVC
+LinearSVC
+KNeighborsRegressor
+
+RandomForestClassifier (분류방식)
+RandomForestRegressor (회귀방식)
+
+from sklearn.linear_model import LinearRegression, Ridge, Lasso
