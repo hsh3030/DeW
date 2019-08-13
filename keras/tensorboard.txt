@@ -1,0 +1,13 @@
+cmd 창을 키고
+
+d:
+cd study 
+로 경로 변경
+dir/w
+graph 폴더가 있는지 확인
+
+tensorboard --logdir=./graph 
+입력 후 
+DESKTOP-1102LPR:6006 뒤에 6006 을 
+크롬에 localhost:6006
+쓰면 그래프를 볼 수 있다
