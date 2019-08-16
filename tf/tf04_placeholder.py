@@ -10,6 +10,7 @@ sess = tf.Session()
 print("sess.run(node1, node2): ", sess.run([node1, node2]))
 print("sess.run(node3) : ", sess.run(node3))
 
+# placeholder 는 feed_dict를 이용하여 값을 넣어주면 된다.
 a = tf.placeholder(tf.float32)
 b = tf.placeholder(tf.float32)
 adder_node = a + b # + provides a shortcut for tf.add(a, b)
