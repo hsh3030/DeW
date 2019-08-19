@@ -25,7 +25,7 @@ with tf.Session() as sess:
     # rnage(2001) = epochs 같다
     for step in range(2001):   
         _, cost_val, W_val, b_val = sess.run(
-            [train, cost, W, b], feed_dict={X: [1, 2, 3], Y: [1, 2, 3]}
+            [train, cost, W, b], feed_dict={X: [1, 2, 3, 4, 5], Y: [2.1, 3.1, 4.1, 5.1, 6.1]}
         )
         if step % 20 == 0:
             print(step, cost_val, W_val, b_val)
