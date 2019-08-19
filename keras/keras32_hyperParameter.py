@@ -72,7 +72,8 @@ hyperparameters = create_hyperparameters()
 
 from sklearn.model_selection import RandomizedSearchCV
 # estimator=> model을 가져온다.
-search = RandomizedSearchCV(estimator=model, param_distributions=hyperparameters, n_iter=10, n_jobs=1, cv=3, verbose=1)# 작업이 n_iter = 10회 수행, cv = 3겹 교차 검증
+# search = RandomizedSearchCV(estimator=model, param_distributions=hyperparameters, n_iter=10, n_jobs=1, cv=3, verbose=1)# 작업이 n_iter = 10회 수행, cv = 3겹 교차 검증
+search = RandomizedSearchCV(estimator=model, param_distributions=hyperparameters, n_iter=10, cv=3, verbose=1)# 작업이 n_iter = 10회 수행, cv = 3겹 교차 검증
 
 search.fit(X_train, Y_train)
 
