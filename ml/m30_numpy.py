@@ -22,7 +22,7 @@ model.add(Dense(1))
 판다스.value
 
 ######## csv 불러오기 ################
-dataset = numpy.loadtxt("./data/pima-indians-diabetes.csv", delimiter = ",")
+dataset = numpy.loadtxt("./DeW/data/data-04-zoo.csv", delimiter = ",")
 iris_data = pd.read_csv("./data/iris.csv", encoding = 'utf-8')
             # index_col = 0, encoding = 'cp949', sep=",", header=None
             # names = ['x1','x2','x3','x4','y']

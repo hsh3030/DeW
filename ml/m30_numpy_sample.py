@@ -1,6 +1,8 @@
+
 ####################
 import numpy as np
 import pandas as pd
+'''
 a = np.arange(10)
 print(a)
 np.save("aaa.npy", a)
@@ -78,4 +80,8 @@ np.save('boston_test.npy', S_test)
 S_train_loaded = np.load('boston_train.npy')
 S_test_loaded = np.load('boston_test.npy')
 ################################################################3
-
+'''
+zoo = pd.read_csv("./DeW/data/data-04-zoo.csv", delimiter = ",")
+np.save("zoo.npy", zoo)
+iris = np.load("iris.npy")
+print(iris)
