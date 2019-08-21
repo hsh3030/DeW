@@ -17,11 +17,47 @@ X = tf.placeholder(tf.float32, [None, 784])
 # 0-9 digits recognition - 10 classes
 Y = tf.placeholder(tf.float32, [None, nb_classes])
 
-W = tf.Variable(tf.random_normal([784, nb_classes]))
-b = tf.Variable(tf.random_normal([nb_classes]))
+W1 = tf.Variable(tf.random_normal([784, nb_classes]))
+b1 = tf.Variable(tf.random_normal([nb_classes]))
+layer1 = tf.nn.softmax(tf.matmul(X, W1) + b1)
 
-# Hypothesis (using softmax)
-hypothesis = tf.nn.softmax(tf.matmul(X, W) + b)
+W2 = tf.Variable(tf.random_normal([nb_classes, 100]))
+b2 = tf.Variable(tf.random_normal([100]))
+layer2 = tf.nn.softmax(tf.matmul(layer1, W2) + b2)
+
+W3 = tf.Variable(tf.random_normal([100, 50]))
+b3 = tf.Variable(tf.random_normal([50]))
+layer3 = tf.nn.softmax(tf.matmul(layer2, W3) + b3)
+
+W4 = tf.Variable(tf.random_normal([50, 100]))
+b4 = tf.Variable(tf.random_normal([100]))
+layer4 = tf.nn.softmax(tf.matmul(layer3, W4) + b4)
+
+W5 = tf.Variable(tf.random_normal([100, 50]))
+b5 = tf.Variable(tf.random_normal([50]))
+layer5 = tf.nn.softmax(tf.matmul(layer4, W5) + b5)
+
+W6 = tf.Variable(tf.random_normal([50, 100]))
+b6 = tf.Variable(tf.random_normal([100]))
+layer6 = tf.nn.softmax(tf.matmul(layer5, W6) + b6)
+
+W7 = tf.Variable(tf.random_normal([100, 20]))
+b7 = tf.Variable(tf.random_normal([20]))
+layer7 = tf.nn.softmax(tf.matmul(layer6, W7) + b7)
+
+W8 = tf.Variable(tf.random_normal([20, 10]))
+b8 = tf.Variable(tf.random_normal([10]))
+layer8 = tf.nn.softmax(tf.matmul(layer7, W8) + b8)
+
+W9 = tf.Variable(tf.random_normal([10, 10]))
+b9 = tf.Variable(tf.random_normal([10]))
+layer9 = tf.nn.softmax(tf.matmul(layer8, W9) + b9)
+
+W10 = tf.Variable(tf.random_normal([10, nb_classes]))
+b10 = tf.Variable(tf.random_normal([nb_classes]))
+hypothesis = tf.nn.softmax(tf.matmul(layer9, W10) + b10)
+
+
 cost = tf.reduce_mean(-tf.reduce_sum(Y * tf.log(hypothesis), axis=1))
 optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.1).minimize(cost)
 
@@ -31,7 +67,7 @@ is_correct = tf.equal(tf.argmax(hypothesis, 1), tf.argmax(Y, 1))
 accuracy = tf.reduce_mean(tf.cast(is_correct, tf.float32))
 
 # parameters
-num_epochs = 100
+num_epochs = 15
 batch_size = 100
 # num_iterations = int(mnist.train.num_examples / batch_size)
 

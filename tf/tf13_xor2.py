@@ -24,7 +24,7 @@ layer3 = tf.nn.relu(tf.matmul(layer2, W3) + b3)
 
 W4 = tf.Variable(tf.random_normal([100,75], name='weight'))
 b4 = tf.Variable(tf.random_normal([75]), name='bias')
-layer4 = tf.sigmoid(tf.matmul(layer3, W4) + b4)
+layer4 = tf.nn.relu(tf.matmul(layer3, W4) + b4)
 
 W5 = tf.Variable(tf.random_normal([75,100], name='weight'))
 b5 = tf.Variable(tf.random_normal([100]), name='bias')
