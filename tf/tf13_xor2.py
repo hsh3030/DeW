@@ -10,9 +10,9 @@ X = tf.placeholder(tf.float32, [None, 2])
 Y = tf.placeholder(tf.float32, [None, 1])
 
 #================================ 한개의 layer ===================================
-W1 = tf.Variable(tf.random_normal([2,100], name='weight'))
-b1 = tf.Variable(tf.random_normal([100]), name='bias')
-layer1 = tf.sigmoid(tf.matmul(X, W1) + b1)
+W1 = tf.Variable(tf.random_normal([2,100], name='weight')) # (input, output)
+b1 = tf.Variable(tf.random_normal([100]), name='bias') # output
+layer1 = tf.sigmoid(tf.matmul(X, W1) + b1) # activation함수
 #=================================================================================
 W2 = tf.Variable(tf.random_normal([100,50], name='weight'))
 b2 = tf.Variable(tf.random_normal([50]), name='bias')
