@@ -10,7 +10,7 @@
 # tf.zeros_initializer()
 # tf.random_uniform_initializer()
 # tf.random_normal_initializer()
-# tf.contrib.layers.xavier_initializer()
+# tf.contrib.layers.xavier_initializer() <= 제일 좋음
 import tensorflow as tf
 import random
 import matplotlib.pyplot as plt
@@ -59,8 +59,6 @@ optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
 
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
-
-
 
 # train my model
 for epoch in range(training_epochs):
