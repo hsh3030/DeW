@@ -26,7 +26,6 @@ kfold_cv = KFold(n_splits=5, shuffle=True)
 
 # 모델의 설정
 
-
 def build_network(keep_prob=0.5, optimizer='adam'):
     inputs = Input(shape=(4, ), name='input')
     x = Dense(512, activation='relu', name='hidden1')(inputs)

@@ -30,7 +30,7 @@ L1 = tf.nn.max_pool(L1, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME'
 print('L1 : ', L1) # ("MaxPool:0", shape=(?, 14, 14, 32), dtype=float32)
 
 # L2 ImgIn shape=(?, 14, 14, 32)
-W2 = tf.Variable(tf.random_normal([3, 3, 32, 64], stddev=0.01))
+W2 = tf.Variable(tf.random_normal([3, 3, 32, 64], stddev=0.01)) # 32는 w1 output가 들어온 것이다.
 print('W2: ', W2)
 
 # Conv -> (?, 14, 14, 64)

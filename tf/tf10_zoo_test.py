@@ -8,7 +8,7 @@ x_data = xy[:, 0:-1]
 y_data = xy[:, [-1]]
 
 print(x_data.shape, y_data.shape)
-'''
+
 nb_classes = 7
 # placeholders for a tensor that will be always fed.
 X = tf.placeholder(tf.float32, shape=[None, 16])
@@ -50,4 +50,4 @@ with tf.Session() as sess:
     pred = sess.run(prediction, feed_dict={X: x_data})
     for p,y in zip(pred, y_data.flatten()):
         print("[{}]\tprediction: {} \tTRUE \tY: {}".format(p == int(y), p, int(y)))
-        '''
+        
