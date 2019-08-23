@@ -31,27 +31,28 @@ learning_rate = 0.001
 training_epochs = 20
 batch_size = 100
 
-W1 = tf.Variable(tf.random_normal([128, 128, 3, 32], stddev=0.01))
+W1 = tf.Variable(tf.random_normal([3, 3, 3, 64], stddev=0.01))
 print(W1)
-L1 = tf.nn.conv2d(X, W1, strides=[1, 4, 4, 1], padding='SAME') 
+L1 = tf.nn.conv2d(X, W1, strides=[1, 3, 3, 1], padding='SAME') 
 print('L1 : ', L1) 
 L1 = tf.nn.relu(L1)
-L1 = tf.nn.max_pool(L1, ksize=[1, 4, 4, 1], strides=[1, 4, 4, 1], padding='SAME') 
+L1 = tf.nn.dropout(L1, 0.25)
+L1 = tf.nn.max_pool(L1, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME') 
 print('L1 : ', L1)
 
-W2 = tf.Variable(tf.random_normal([128, 128, 32, 32], stddev=5e-2))
-L2 = tf.nn.conv2d(L1, W2, strides= [1, 5, 5, 1], padding = 'SAME')
+W2 = tf.Variable(tf.random_normal([2, 2, 32, 64], stddev=5e-2))
+L2 = tf.nn.conv2d(L1, W2, strides= [1, 2, 2, 1], padding = 'SAME')
 print('L2 : ', L2)
 L2 = tf.nn.relu(L2)
-L2 = tf.nn.max_pool2d(L2, ksize=[1, 5, 5, 1], strides=[1, 5, 5, 1], padding = 'SAME')
+L2 = tf.nn.max_pool2d(L2, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding = 'SAME')
 
-W3 = tf.Variable(tf.random_normal([64, 64, 32, 32], stddev=5e-2))
+W3 = tf.Variable(tf.random_normal([2, 2, 32, 64], stddev=5e-2))
 L3 = tf.nn.conv2d(L2, W3, strides= [1, 3, 3, 1], padding = 'SAME')
 print('L3 : ', L3)
 L3 = tf.nn.relu(L3)
 L3 = tf.nn.max_pool2d(L3, ksize=[1, 3, 3, 1], strides=[1, 3, 3, 1], padding = 'SAME')
 
-W4 = tf.Variable(tf.random_normal([32, 32, 32, 32], stddev=5e-2))
+W4 = tf.Variable(tf.random_normal([2, 2, 32, 64], stddev=5e-2))
 L4 = tf.nn.conv2d(L3, W4, strides= [1, 2, 2, 1], padding = 'SAME')
 print('L4 : ', L4)
 L4 = tf.nn.relu(L4)
