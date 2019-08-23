@@ -4,7 +4,7 @@ import random
 import numpy as np
 tf.set_random_seed(777)
 
-iris_data = np.loadtxt("./DeW/iris2_data.csv")
+iris_data = np.load("./iris2_data.npy")
 
 print("iris_data:",iris_data.shape)
 
@@ -42,7 +42,7 @@ print("reshape one_hot:", Y_one_hot)
 L1 = tf.layers.dense(X, 100, activation = tf.nn.relu)
 L2 = tf.layers.dense(L1, 20, activation = tf.nn.relu)
 L3 = tf.layers.dense(L2, 10, activation = tf.nn.relu)
-logits = tf.layers.dense(X, 3, activation= tf.nn.relu)
+logits = tf.layers.dense(L3, 3, activation= tf.nn.relu)
 
 
 hypothesis = tf.nn.softmax(logits)
