@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import random
 import numpy as np
 from sklearn.model_selection import train_test_split
-tf.set_random_seed(777)
+tf.set_random_seed(66)
 
 cancer_data = np.load("./cancer_data.npy")
 
@@ -14,29 +14,14 @@ x_train = cancer_data[:,:-1]
 y_train = cancer_data[:,[-1]]
 
 print(x_train.shape, y_train.shape)
-x_train, x_test, y_train, y_test = train_test_split(x_train,y_train, test_size=0.2)
-print(x_train.shape, y_train.shape)
 
-cnt = 1
-def layer(input, output,uplayer,dropout=0,end=False):
-    global cnt
-    w = tf.get_variable("w%d"%(cnt),shape=[input, output],initializer=tf.constant_initializer())
-    b = tf.Variable(tf.random_normal([output]))
-    if ~end:
-        layer = tf.nn.leaky_relu(tf.matmul(uplayer, w)+b)
-    else: layer = tf.matmul(uplayer, w)+b
-
-    if dropout != 0:
-        layer = tf.nn.dropout(layer, keep_prob=dropout)
-    cnt += 1
-    return layer
 
 X = tf.placeholder(tf.float32,[None, 30])
 Y = tf.placeholder(tf.float32,[None, 1])
 keep_prob = 0
-
-
-L1 = tf.layers.dense(X, 100, activation = tf.nn.relu)
+x_train, x_test, y_train, y_test = train_test_split(x_train,y_train, test_size=0.2)
+print(x_train.shape, y_train.shape)
+L1 = tf.layers.dense(X, 50, activation = tf.nn.relu)
 L2 = tf.layers.dense(L1, 20, activation = tf.nn.relu)
 L3 = tf.layers.dense(L2, 10, activation = tf.nn.relu)
 logits = tf.layers.dense(L3, 1, activation= tf.nn.relu)
