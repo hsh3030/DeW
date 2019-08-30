@@ -75,7 +75,7 @@ categorical_features_indices = np.where(test.dtypes != np.float)[0]
 print('Categorial Feature Indices: ', categorical_features_indices)
 
 # Model
-def run_cv_model(categorical_indices, train, test, target, model_fn, params={}, eval_fn=None, label='model', n_folds=10):
+def run_cv_model(categorical_indices, train, test, target, model_fn, params={}, eval_fn=None, label='model', n_folds=6):
     kf = KFold(n_splits=n_folds)
     fold_splits = kf.split(train, target)
     cv_scores = []
@@ -133,16 +133,16 @@ def runCAT(categorical_indices, train_X, train_y, test_X, test_y, test_X2, param
 cat_params = {'loss_function': 'CrossEntropy', 
               'eval_metric': "AUC",
               'task_type': "GPU",
-              'learning_rate': 0.01,
+              'learning_rate': 0.001,
               'iterations': 10000,
               'random_seed': 42,
               'od_type': "Iter",
               'bagging_temperature': 0.2,
               'depth': 10,
-              'early_stopping_rounds': 500,
+              'early_stopping_rounds': 800,
              }
 
-n_folds = 10
+n_folds = 9
 results = run_cv_model(categorical_features_indices, train, test, target, runCAT, cat_params, auc, 'cat', n_folds=n_folds)
 
 # Make submission
