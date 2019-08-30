@@ -1,6 +1,6 @@
 import tensorflow as tf
-
 from tensorflow.examples.tutorials.mnist import input_data
+
 mnist = input_data.read_data_sets("./mnist/data/", one_hot=True)
 
 ## 옵션 설정
@@ -23,7 +23,6 @@ Y = tf.placeholder(tf.float32, [None, n_class])
 W = tf.Variable(tf.random_normal([n_hidden, n_class]))
 b = tf.Variable(tf.random_normal([n_class]))
 
-
 print(X) # (?, 28, 28)
 print(Y) # (?, 10)
 print(W) # (128, 28)
@@ -32,10 +31,9 @@ print(b) # (10,)
 # RNN 에 학습에 사용할 셀을 생성
 # 다음 함수들을 사용하면 다른 구조의 셀로 간단하게 변경 가능
 # BasicRNNCell, BasicLSTMCell, GRUCell
-cell = tf.nn.rnn_cell.BasicRNNCell(n_hidden)
+cell = tf.nn.rnn_cell.BasicRNNCell(n_hidden) # 첫번째 아웃풋 갯수가 들어간다. => n_hidden
 
-outputs, states = tf.nn.dynamic_rnn(cell, X, dtype=tf.float32)
-
+outputs, states = tf.nn.dynamic_rnn(cell, X, dtype=tf.float32) # shape = X 값
 
 print(outputs) #(?, 28, 128)
 
@@ -63,6 +61,7 @@ sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 
 total_batch = int(mnist.train.num_examples/batch_size)
+
 for epoch in range(total_epoch):
     total_cost = 0
 

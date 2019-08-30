@@ -73,7 +73,6 @@ model.add(Conv2D(60, (3,3), padding='same', input_shape=(IMG_ROWS, IMG_COLS, IMG
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size = (2, 2)))
 model.add(Dropout(0.25))
-
 model.add(Flatten()) # 1차원으로 펼쳐 dnn으로 변경된다.
 model.add(Dense(512))
 model.add(BatchNormalization())
