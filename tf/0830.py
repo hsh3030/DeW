@@ -61,7 +61,7 @@ ord_5 = dict(zip(ord_5, range(len(ord_5))))
 train.loc[:, 'ord_5'] = train['ord_5'].apply(lambda x: ord_5[x]).astype(float)
 test.loc[:, 'ord_5'] = test['ord_5'].apply(lambda x: ord_5[x]).astype(float)
 
-for col in ['ord_0', 'ord_1_oe', 'ord_2_oe', 'ord_3_oe', 'ord_4_oe', 'ord_5_oe1', 'ord_5_oe2', 'ord_1_count']: #, 'ord_5_oe_add', 'ord_5_oe_join'
+for col in ['ord_0', 'ord_1_oe', 'ord_2_oe', 'ord_3_oe', 'ord_4_oe', 'ord_5_oe1', 'ord_5_oe2', 'ord_1_count']:
     train[col]= train[col].astype('float64')
     test[col]= test[col].astype('float64')
 
@@ -75,7 +75,7 @@ categorical_features_indices = np.where(test.dtypes != np.float)[0]
 print('Categorial Feature Indices: ', categorical_features_indices)
 
 # Model
-def run_cv_model(categorical_indices, train, test, target, model_fn, params={}, eval_fn=None, label='model', n_folds=6):
+def run_cv_model(categorical_indices, train, test, target, model_fn, params={}, eval_fn=None, label='model', n_folds=15):
     kf = KFold(n_splits=n_folds)
     fold_splits = kf.split(train, target)
     cv_scores = []
@@ -133,16 +133,16 @@ def runCAT(categorical_indices, train_X, train_y, test_X, test_y, test_X2, param
 cat_params = {'loss_function': 'CrossEntropy', 
               'eval_metric': "AUC",
               'task_type': "GPU",
-              'learning_rate': 0.001,
+              'learning_rate': 0.1,
               'iterations': 10000,
               'random_seed': 42,
               'od_type': "Iter",
-              'bagging_temperature': 0.2,
-              'depth': 10,
+            #   'bagging_temperature': 0.2,
+            #   'depth': 10,
               'early_stopping_rounds': 800,
              }
 
-n_folds = 9
+n_folds = 5
 results = run_cv_model(categorical_features_indices, train, test, target, runCAT, cat_params, auc, 'cat', n_folds=n_folds)
 
 # Make submission
