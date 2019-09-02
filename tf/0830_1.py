@@ -1,76 +1,64 @@
 import pandas as pd
-import numpy as np
-from sklearn.model_selection import train_test_split
-from keras.layers import Dense, Dropout, Embedding, Flatten, Input, merge
-from keras.layers.normalization import BatchNormalization
-from keras.layers.advanced_activations import PReLU
-from keras.models import Model
-from time import time
-import datetime
-from itertools import combinations
-import pickle
-from scipy import sparse
-from sklearn.preprocessing import StandardScaler
+
+from target_encoding import TargetEncoderClassifier, TargetEncoder
+from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import StratifiedKFold
+from sklearn.linear_model import LinearRegression, LogisticRegression
 
 train = pd.read_csv('./train.csv')
 test = pd.read_csv('./test.csv')
+sample_submission = pd.read_csv('./sample_submission.csv')
 
-train_label = train['target']
-train_id = train['id']
-del train['target'], train['id']
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
 
-test_id = test['id']
-del test['id']
-print(train_id)
-from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+len_uniques = []
+for c in train.columns.drop(['id', 'target']):
+    le = LabelEncoder()
+    le.fit(pd.concat([train[c], test[c]])) 
+    train[c] = le.transform(train[c])
+    test[c] = le.transform(test[c])
+    print(c, len(le.classes_))
+    len_uniques.append(len(le.classes_))
+    
+X = train.drop(['target', 'id'], axis=1)
+y = train['target']
 
-encoder = LabelEncoder()
-train['bin_3'] = encoder.fit_transform(train['bin_3'])
-train['bin_4'] = encoder.fit_transform(train['bin_4'])
-train['nom_0'] = encoder.fit_transform(train['nom_0'])
-train['nom_1'] = encoder.fit_transform(train['nom_1'])
-train['nom_4'] = encoder.fit_transform(train['nom_4'])
-train['nom_3'] = encoder.fit_transform(train['nom_3'])
-train['nom_2'] = encoder.fit_transform(train['nom_2'])
-train['ord_1'] = encoder.fit_transform(train['ord_1'])
-train['ord_2'] = encoder.fit_transform(train['ord_2'])
-train['ord_3'] = encoder.fit_transform(train['ord_3'])
-train['ord_4'] = encoder.fit_transform(train['ord_4'])
-train['ord_5'] = encoder.fit_transform(train['ord_5'])
-train['nom_5'] = encoder.fit_transform(train['nom_5'])
-train['nom_6'] = encoder.fit_transform(train['nom_6'])
-train['nom_7'] = encoder.fit_transform(train['nom_7'])
-train['nom_8'] = encoder.fit_transform(train['nom_8'])
-train['nom_9'] = encoder.fit_transform(train['nom_9'])
-print(train.head())
-test['bin_3'] = encoder.fit_transform(test['bin_3'])
-test['bin_4'] = encoder.fit_transform(test['bin_4'])
-test['nom_0'] = encoder.fit_transform(test['nom_0'])
-test['nom_1'] = encoder.fit_transform(test['nom_1'])
-test['nom_4'] = encoder.fit_transform(test['nom_4'])
-test['nom_3'] = encoder.fit_transform(test['nom_3'])
-test['nom_2'] = encoder.fit_transform(test['nom_2'])
-test['ord_1'] = encoder.fit_transform(test['ord_1'])
-test['ord_2'] = encoder.fit_transform(test['ord_2'])
-test['ord_3'] = encoder.fit_transform(test['ord_3'])
-test['ord_4'] = encoder.fit_transform(test['ord_4'])
-test['ord_5'] = encoder.fit_transform(test['ord_5'])
-test['nom_5'] = encoder.fit_transform(test['nom_5'])
-test['nom_6'] = encoder.fit_transform(test['nom_6'])
-test['nom_7'] = encoder.fit_transform(test['nom_7'])
-test['nom_8'] = encoder.fit_transform(test['nom_8'])
-test['nom_9'] = encoder.fit_transform(test['nom_9'])
-print(test.head())
+ALPHA = 22
+MAX_UNIQUE = max(len_uniques)
+FEATURES_COUNT = X.shape[1]
 
-print(train.shape)
-print(test.shape)
-x = np.asarray(train)
-y = np.asarray(test)
+'''
+alpha: float or int, smoothing for generalization.
 
-x = np.reshape()
-# from sklearn.model_selection import train_test_split  
+max_unique: int, maximum number of unique values in a feature. 
+            If there are more unique values inside the feature,
+            then the algorithm will split this feature into bins, 
+            the number of max_unique.
 
-# x_train, x_test, y_train, y_test = train_test_split(
-#     x, y, train_size=0.8, test_size=0.2, shuffle = True)
+used_features: int, this is a number of used features for prediction
+               The algorithm encodes all features with the average value of the target, 
+               then the std is considered inside each feature,
+               and "used_features" features with the highest std are selected to use only informative features. 
+'''
+
+enc = TargetEncoderClassifier(alpha=ALPHA, max_unique=MAX_UNIQUE, used_features=FEATURES_COUNT)
+score = cross_val_score(enc, X, y, scoring='roc_auc', cv=cv)
+print(f'score: {score.mean():.4}, std: {score.std():.4}')
+
+enc.fit(X, y)
+pred_enc = enc.predict_proba(test.drop('id', axis=1))[:,1]
+
+enc = TargetEncoder(alpha=ALPHA, max_unique=MAX_UNIQUE, split=[cv])
+X_train = enc.transform_train(X=X, y=y)
+X_test = enc.transform_test(test.drop('id', axis=1))
+
+lin = LogisticRegression()
+score = cross_val_score(lin, X_train, y, scoring='roc_auc', cv=cv)
+print(f'score: {score.mean():.4}, std: {score.std():.4}')
+
+
+lin.fit(X_train, y)
+pred_lin = lin.predict_proba(X_test)[:,1]
+
+sample_submission['target'] = pred_enc + pred_lin
+sample_submission.to_csv('target_submission.csv', index=False)
